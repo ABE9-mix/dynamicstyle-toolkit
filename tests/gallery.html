@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>预设一览</title>
+<style>
+  body { margin: 0; background: #07070a; color: #cfcfe0; font: 12px/1.4 "Segoe UI", system-ui, -apple-system, sans-serif; }
+  h1 { font: 600 13px/1 "Segoe UI", system-ui, -apple-system, sans-serif; letter-spacing: .16em; text-transform: uppercase;
+       color: #6f6f88; margin: 0; padding: 14px 16px; border-bottom: 1px solid #1b1b24; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
+  .cell { background: #0c0c11; padding: 10px 0 6px; text-align: center; }
+  .cap { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 11px; color: #8b8ba3; padding: 4px 0 2px; }
+  .cap b { color: #c8f751; font-weight: 600; }
+  wavy-edge { display: block; }
+</style>
+</head>
+<body>
+<h1>StyleKit · 波浪边缘块 · 预设</h1>
+<div class="grid" id="grid"></div>
+<script src="../dist/wavy-edge.js"></script>
+<script>
+  const grid = document.getElementById('grid');
+  for (const p of SKWavy.presets) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    const el = document.createElement('wavy-edge');
+    const st = Object.assign({}, SKWavy.defaults, p.state, { w: 340, h: 200, paused: true });
+    for (const [k, v] of Object.entries(st)) {
+      const a = k.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
+      el.setAttribute(a, String(v));
+    }
+    const cap = document.createElement('div');
+    cap.className = 'cap';
+    cap.innerHTML = '<b>' + p.name + '</b> · ' + st.mode + ' · waves ' + st.waves + ' · amp ' + st.amp;
+    cell.appendChild(el);
+    cell.appendChild(cap);
+    grid.appendChild(cell);
+  }
+</script>
+</body>
+</html>

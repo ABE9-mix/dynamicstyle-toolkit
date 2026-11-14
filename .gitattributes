@@ -1,0 +1,8 @@
+# 统一换行，避免 Windows 上 CRLF 混入导致部署端 diff 噪音
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.webm binary
+*.zip binary
+*.ico binary

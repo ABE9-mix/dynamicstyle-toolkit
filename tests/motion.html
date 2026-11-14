@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>连续性 / 极限值验收</title>
+<style>
+  body { margin: 0; background: #07070a; color: #cfcfe0; font: 12px/1.4 "Segoe UI", system-ui, -apple-system, sans-serif; }
+  h1 { font: 600 12px/1 "Segoe UI", system-ui, -apple-system, sans-serif; letter-spacing: .16em; text-transform: uppercase;
+       color: #6f6f88; margin: 0; padding: 12px 16px 10px; border-bottom: 1px solid #1b1b24; }
+  .row { display: flex; gap: 6px; padding: 10px 16px; flex-wrap: nowrap; }
+  .cell { background: #0c0c11; border: 1px solid #191922; border-radius: 8px; overflow: hidden; }
+  .cap { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 10px; color: #8b8ba3; padding: 2px 8px 6px; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<h1>连续性（同一参数，t = 0 → 1.6s）· 振幅极限</h1>
+<div class="row" id="row1"></div>
+<div class="row" id="row2"></div>
+<script src="../dist/wavy-edge.js"></script>
+<script>
+  function render(cell, st, time) {
+    const p = SKWavy.pad(st);
+    const cw = st.w + p * 2, ch = st.h + p * 2;
+    const cv = document.createElement('canvas');
+    cv.width = cw; cv.height = ch;
+    const ctx = cv.getContext('2d');
+    ctx.translate(st.w / 2 + p, st.h / 2 + p);
+    const pts = SKWavy.outline(st, time);
+    const path = new Path2D();
+    path.moveTo(pts[0], pts[1]);
+    for (let i = 1; i < pts.length >> 1; i++) path.lineTo(pts[i * 2], pts[i * 2 + 1]);
+    path.closePath();
+    ctx.fillStyle = st.fill;
+    ctx.fill(path);
+    cell.appendChild(cv);
+    return cv;
+  }
+  const base = Object.assign({}, SKWavy.defaults, { w: 240, h: 155, shadow: false });
+  const r1 = document.getElementById('row1');
+  for (let i = 0; i < 6; i++) {
+    const t = i * 0.32;
+    const cell = document.createElement('div'); cell.className = 'cell';
+    render(cell, base, t);
+    const cap = document.createElement('div'); cap.className = 'cap';
+    cap.textContent = 't=' + t.toFixed(2) + 's';
+    cell.appendChild(cap); r1.appendChild(cell);
+  }
+  const r2 = document.getElementById('row2');
+  for (const amp of [0, 10, 20, 30, 40]) {
+    const st = Object.assign({}, base, { amp });
+    const cell = document.createElement('div'); cell.className = 'cell';
+    render(cell, st, 0.8);
+    const cap = document.createElement('div'); cap.className = 'cap';
+    cap.textContent = 'amp=' + amp + '%  waves=' + st.waves;
+    cell.appendChild(cap); r2.appendChild(cell);
+  }
+</script>
+</body>
+</html>

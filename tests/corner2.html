@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>圆角几何测量</title>
+<style>
+  html, body { margin: 0; background: #000; }
+  .p { position: absolute; top: 40px; width: 120px; height: 120px; background: #fff; border-radius: 24px; }
+  #a { left: 40px;  corner-shape: round; }
+  #b { left: 200px; corner-shape: squircle; }
+  #c { left: 360px; corner-shape: superellipse(4); }
+  #d { left: 520px; corner-shape: superellipse(2); }
+  #e { left: 680px; corner-shape: superellipse(1.4); }
+  #f { left: 840px; corner-shape: superellipse(1.6); }
+  #g { left: 1000px; corner-shape: superellipse(1.8); }
+</style>
+</head>
+<body>
+<div class="p" id="a"></div>
+<div class="p" id="b"></div>
+<div class="p" id="c"></div>
+<div class="p" id="d"></div>
+<div class="p" id="e"></div>
+<div class="p" id="f"></div>
+<div class="p" id="g"></div>
+</body>
+</html>

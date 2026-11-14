@@ -1,0 +1,15 @@
+# 依赖 / 构建产物
+node_modules/
+dist-upload/
+*.zip
+
+# 验收用的截图与录屏（体积大，不入库）
+tools/shots/
+
+# 系统 / 编辑器杂项
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+.vscode/
+.idea/

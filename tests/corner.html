@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>corner-shape 对照</title>
+<style>
+  body { margin: 0; background: #0f1216; color: #e9eef3; font: 13px system-ui, sans-serif; padding: 26px; }
+  .row { display: flex; gap: 22px; align-items: center; margin-bottom: 22px; }
+  .box { width: 168px; height: 56px; background: #c9704a; display: grid; place-items: center; font-size: 11px; color: #1a0f0a; }
+  .pill { width: 168px; height: 56px; border-radius: 999px; background: #8bd1d8; display: grid; place-items: center; color: #0d2b2e; font-size: 11px; }
+  .cap { font: 11px ui-monospace, monospace; color: #8b98a5; width: 190px; }
+  .c-round { corner-shape: round; }
+  .c-sq64 { corner-shape: squircle; }
+  .c-se4  { corner-shape: superellipse(4); }
+  .c-se3  { corner-shape: superellipse(3); }
+  .c-se5  { corner-shape: superellipse(5); }
+</style>
+</head>
+<body>
+<div class="row"><span class="cap">r18 · round（基准）</span><div class="box c-round">18px round</div></div>
+<div class="row"><span class="cap">r18 · squircle</span><div class="box c-sq64">squircle</div></div>
+<div class="row"><span class="cap">r18 · superellipse(4)</span><div class="box c-se4">superellipse(4)</div></div>
+<div class="row"><span class="cap">r18 · superellipse(3)</span><div class="box c-se3">superellipse(3)</div></div>
+<div class="row"><span class="cap">r18 · superellipse(5)</span><div class="box c-se5">superellipse(5)</div></div>
+<div class="row"><span class="cap">r999 胶囊 · round</span><div class="pill c-round">999 round</div></div>
+<div class="row"><span class="cap">r999 胶囊 · superellipse(4)</span><div class="pill c-se4">999 superellipse(4)</div></div>
+<div class="row"><span class="cap">r999 胶囊 · squircle</span><div class="pill c-sq64">999 squircle</div></div>
+</body>
+</html>

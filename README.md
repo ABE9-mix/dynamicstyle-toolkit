@@ -295,6 +295,8 @@ node tools/shot.mjs http://127.0.0.1:8791/index.html out.png 2500
 
 ## 部署（腾讯 EdgeOne Pages）
 
+仓库：<https://github.com/ABE9-mix/dynamicstyle-toolkit>
+
 纯静态站点，**没有构建步骤**：所有 JS 都是原生 ES5 风格脚本，直接 `<script src>` 引入。
 
 ```powershell

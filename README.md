@@ -8,7 +8,7 @@
 站点根目录就是**总目录页**（catalog）：列出所有组件，每个卡片里跑的是**真·实时预览**
 （一个 `?preview=1` 的 iframe，等比缩放），点进去就是完整工作台。
 
-线上：<https://github.com/ABE9-mix/dynamicstyle-toolkit>（可直连腾讯 EdgeOne Pages）
+线上：<https://github.com/ABE9-mix/dynamicstyle-toolkit>（Git 直连 **Netlify** 部署）
 
 ---
 
@@ -19,6 +19,7 @@
 ├─ index.html            总目录页
 ├─ apps.json             工具清单（总目录读它渲染）
 ├─ DESIGN.md             设计方法：中文主导的排版系统（新应用照它做）
+├─ netlify.toml          Netlify 部署配置（构建命令 + 发布目录 + 缓存头）
 ├─ assets/
 │  ├─ logo.svg           站点图标（当前为 iOS 网格占位，矢量 favicon）
 │  ├─ catalog.css        总目录样式
@@ -93,7 +94,7 @@ py -3 -m http.server 8791 --bind 127.0.0.1
 
 | 分支 | 角色 | 说明 |
 |---|---|---|
-| `main` | **稳定线** | 只接收验收过的提交；建站托管（EdgeOne Pages）从这里构建 |
+| `main` | **稳定线** | 只接收验收过的提交；Netlify 从这里构建发布 |
 | `dev` | **探索线** | 现阶段的新功能、新工具、重构都先投这里，跑通了再合回 `main` |
 
 ```powershell
@@ -109,19 +110,29 @@ git switch main && git merge --no-ff dev   # 验收后合并
 
 之前的「K」标设计稿保留在 `brand/logo-k.svg`（不参与打包），等图标定了再启用。
 
-## 打包 / 部署（腾讯 EdgeOne Pages）
+## 打包 / 部署（Netlify）
+
+仓库根有 [`netlify.toml`](netlify.toml)，Netlify 会自动读，**不用在面板里手填**：
+
+| 项 | 值 |
+|---|---|
+| 构建命令 | `node tools/build-site.mjs` |
+| 发布目录 | `dist-upload` |
+| Node | 任意 18+（构建只做文件拷贝，无依赖） |
 
 ```powershell
-node tools/build-site.mjs      # → dist-upload/（总目录 + 各应用的运行时文件）
+node tools/build-site.mjs      # 本地复现：→ dist-upload/
 ```
 
 `dist-upload/` 只含运行时文件（`index.html`、`apps.json`、`assets/`、`apps/*/{index.html,css,src,dist,assets}`），
-各应用的 `tools/`、`tests/`、预览大图都不会进去。
+各应用的 `tools/`、`tests/`、预览大图都不会进去（15 个文件 / 约 194 KB）。
 
-| 方式 | 构建命令 | 输出目录 |
-|---|---|---|
-| 免构建 | 留空 | `/`（仓库根目录本身就是可跑的站点） |
-| 干净产物 | `node tools/build-site.mjs` | `dist-upload` |
+- **连 Git 部署**：Netlify → Add new site → Import from Git → 选 `ABE9-mix/dynamicstyle-toolkit`，分支 `main`，其余留空（读 netlify.toml）
+- **手动上传**：把 `dist-upload/` 里的内容打包成 zip 拖进 Netlify Drop
+- Netlify 默认域名形如 `xxx.netlify.app`，也可在 Domain management 绑自定义域名（自动 HTTPS）
+
+> 想改成「零构建」：删掉 `netlify.toml` 里的 `command`，`publish` 改成 `"."`
+> —— 代价是 README / DESIGN.md / tools / tests 也会被一起发布。
 
 ---
 

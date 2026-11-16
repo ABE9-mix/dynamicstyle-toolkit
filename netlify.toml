@@ -1,0 +1,45 @@
+# Netlify 部署配置（站点是纯静态、无依赖，构建只做一次文件拷贝）
+# Netlify 会自动读这个文件，不用在面板里手填。
+# 想改成「零构建」：删掉 command，publish 改成 "."（代价是 README / tools / tests 也会发布）。
+
+[build]
+  command = "node tools/build-site.mjs"
+  publish = "dist-upload"
+
+# ---- 缓存：HTML 不缓存，静态资源短缓存（资源已带 ?v= 版本串）----
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/apps/*/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/apps/*/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/apps/*/src/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/apps/*/dist/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# ---- 安全响应头 ----
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

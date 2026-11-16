@@ -574,3 +574,17 @@ input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 4px; }
 
 /* 图层面板里只留列表，去掉原先的「新建/复制来源」行 */
 .layers-add { display: none; }
+
+/* ============================================================
+   预览模式：总目录的卡片 iframe 用 ?preview=1 加载本页
+   只留画布，隐藏全部 HUD，背景透明交给外层卡片
+   ============================================================ */
+body.preview-mode {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+/* 所有 HUD 浮层都带 .hud，一次全隐藏；toast 单独处理 */
+body.preview-mode .hud,
+body.preview-mode .toast {
+  display: none !important;
+}

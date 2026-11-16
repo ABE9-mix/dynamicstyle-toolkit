@@ -1,81 +1,46 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>StyleKit · 噪声边缘组件生成器</title>
-<link rel="stylesheet" href="css/studio.css">
+<title>Dynamic Style Toolkit · 可参数化的网页样式组件集</title>
+<meta name="description" content="A small collection of live, parameter-driven web style components. 纯静态、无构建、可单独嵌入。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2314171b'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23d97a4f'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/catalog.css">
 </head>
 <body>
 
-<canvas id="stage"></canvas>
-
-<!-- 顶部：品牌 + 主操作 -->
-<header class="hud top" id="topbar">
-  <div class="brand"><span class="dot"></span>StyleKit</div>
-  <select id="effect-select" class="mini-select" title="效果"></select>
-  <span class="sep"></span>
-  <button id="btn-play" class="mini" title="播放 / 暂停 (空格)">暂停</button>
-  <button id="btn-random" class="mini" title="随机形变 (R)">随机</button>
-  <span class="sep"></span>
-  <div class="swatches" id="bg-seg">
-    <button data-bg="ink" title="深底"></button>
-    <button data-bg="paper" title="浅底"></button>
-    <button data-bg="grid" class="on" title="网格"></button>
-    <button data-bg="checker" title="棋盘"></button>
+<header class="hero">
+  <div class="hero-top">
+    <div class="brand"><span class="dot"></span><span id="brand-name">Dynamic Style Toolkit</span></div>
+    <button id="theme-btn" class="ghost-btn" title="切换明/暗">◐ 明暗</button>
   </div>
 
+  <h1 class="title">
+    <span class="line">Playful,</span>
+    <span class="line">parameter-driven</span>
+    <span class="line"><em>style components.</em></span>
+  </h1>
+
+  <p class="lede" id="tagline">A small collection of live, parameter-driven web style components.</p>
+
+  <div class="meta">
+    <span id="app-count">— 个应用</span>
+    <span class="sep"></span>
+    <span>纯静态 · 无构建 · 可直接嵌入</span>
+    <span class="sep"></span>
+    <a href="https://github.com/ABE9-mix/dynamicstyle-toolkit" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
 </header>
 
-<!-- 右上：图层面板开关（单按钮，不再套父容器） -->
-<button class="hud pill-btn on" id="btn-layers" title="图层">图层</button>
+<main class="grid" id="grid" aria-label="应用列表"></main>
 
-<!-- 右侧：图层 -->
-<aside class="hud layers" id="layers-panel">
-  <div class="panel-head">
-    <span class="ttl">图层</span>
-    <span class="count" id="layer-count">0</span>
-    <button class="icon-btn" id="btn-layers-close" title="收起">✕</button>
-  </div>
-  
-  <div class="layers-list" id="layers-list"></div>
-</aside>
-
-<!-- 顶层：创建元素工具条（与图层面板解耦） -->
-<div class="hud create-bar" id="create-bar">
-  <span class="cb-label">新建</span>
-  <div class="cb-list" id="cb-list"></div>
-  <span class="cb-sep"></span>
-  <button class="cb-btn" id="cb-dup" title="复制选中元素（Ctrl/⌘ + D）">⧉</button>
-</div>
-
-<!-- 参数气泡：跟随选中图形 -->
-<div class="hud bubble" id="bubble">
-  <div class="bubble-head" id="bubble-head">
-    <span class="grip">⠿</span>
-    <input id="name-input" class="name-input" spellcheck="false">
-    <button class="icon-btn" id="btn-dup" title="复制 (Ctrl+D)">⧉</button>
-    <button class="icon-btn danger" id="btn-del" title="删除 (Del)">✕</button>
-    <button class="icon-btn" id="btn-bubble-min" title="收起">–</button>
-  </div>
-  <div class="bubble-body" id="bubble-body"></div>
-</div>
-
-<!-- 左下：导出按钮 -->
-<div class="hud actions" id="actions">
-  <button class="act primary" data-act="html" title="下载 .html 单文件组件　·　Shift+点击 = 复制代码">HTML</button>
-  <button class="act" data-act="copy-css" title="复制选中变体的纯 CSS 版（clip-path 关键帧）">CSS</button>
-  <button class="act" data-act="copy-svg" title="复制整个场景的 SVG">SVG</button>
-  <button class="act" data-act="copy-json" title="复制场景 JSON">JSON</button>
+<footer class="foot">
+  <span>Dynamic Style Toolkit</span>
   <span class="sep"></span>
-  <button class="act" data-act="webm" title="把动画录成 WebM：点一下开始，再点一下结束并下载">WebM</button>
-</div>
+  <span>新增应用：把目录放进 <code>apps/</code>，再往 <code>apps.json</code> 加一条</span>
+</footer>
 
-<div class="toast" id="toast"></div>
-
-<script src="dist/wavy-edge.js"></script>
-<script src="src/shape.js"></script>
-<script src="src/exporters.js"></script>
-<script src="src/studio.js"></script>
+<script src="assets/catalog.js"></script>
 </body>
 </html>

@@ -4,6 +4,7 @@ dist-upload/
 *.zip
 
 # 验收用的截图与录屏（体积大，不入库）
+apps/*/tools/shots/
 tools/shots/
 
 # 系统 / 编辑器杂项

@@ -1,0 +1,16 @@
+{
+  "name": "Dynamic Style Toolkit",
+  "tagline": "A small collection of live, parameter-driven web style components.",
+  "apps": [
+    {
+      "id": "stylekit",
+      "name": "StyleKit",
+      "sub": "噪声边缘组件生成器",
+      "desc": "纯色块，边缘由三维噪声沿法线实时生成，连续可调。五种底形（矩形 / 椭圆 / 多边形 / 星形 / SVG 路径），可拖把手缩放旋转，导出 HTML / CSS / SVG / JSON / WebM。",
+      "tags": ["canvas", "noise", "shape", "export"],
+      "path": "apps/stylekit/",
+      "accent": "#ffc100",
+      "status": "ready"
+    }
+  ]
+}

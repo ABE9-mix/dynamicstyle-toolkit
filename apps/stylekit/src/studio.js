@@ -1357,6 +1357,20 @@
     selId = scene.items[0].id;
   }
 
+  /* ---------------- 预览模式（总目录的卡片 iframe 用 ?preview=1） ---------------- */
+  if (/(?:^|[?&])preview=1(?:&|$)/.test(location.search)) {
+    document.body.classList.add('preview-mode');
+    selectionVisible = false;          // 不画选框和把手
+    const it = scene.items[0];
+    if (it) {
+      const m = Math.min(scene.vw || 1440, scene.vh || 900);
+      it.st.w = Math.round(m * 0.72);
+      it.st.h = Math.round(m * 0.52);
+      it.x = (scene.vw || 1440) / 2;
+      it.y = (scene.vh || 900) / 2;
+    }
+  }
+
   buildCreateBar();
   renderLayers();
   buildBubble();

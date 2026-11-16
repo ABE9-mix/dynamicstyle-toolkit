@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>动态波点背景 · WaveDots (WebGL)</title>
+<link rel="icon" href="../../assets/logo.svg">
+<style>
+  :root{
+    --bg:#14171b; --bg-2:#191d23; --clay:#d97a4f; --teal:#8bd1d8; --cream:#f9efb9;
+    --text:#eef1f5; --muted:#98a2ad; --dim:#6b7681;
+    --zh:"OPPO Sans","OPPOSans","MiSans","HarmonyOS Sans SC","Source Han Sans SC","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    --mono:ui-monospace,"SFMono-Regular","Cascadia Mono","JetBrains Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--zh)}
+  #cv{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+  .leafetch{position:fixed;inset:0;z-index:1;pointer-events:none;background:
+      radial-gradient(48% 60% at 16% 12%, rgba(217,122,79,.08), transparent 60%),
+      radial-gradient(50% 60% at 84% 88%, rgba(139,209,216,.08), transparent 62%);}
+  .hud{position:fixed;z-index:5}
+  .back{left:clamp(24px,4vw,64px);top:clamp(16px,2.2vw,26px);display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 12px;
+    border-radius:999px;corner-shape:round;background:rgba(255,255,255,.07);color:var(--muted);font-family:var(--zh);font-size:12px;
+    line-height:1;text-decoration:none;white-space:nowrap;transition:background .15s,color .15s}
+  .back:hover{background:rgba(255,255,255,.16);color:var(--text)}
+  .title{left:clamp(24px,4vw,64px);top:calc(clamp(24px,4vw,64px) + 38px);max-width:min(64vw,800px);pointer-events:none}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--clay);margin-bottom:14px}
+  .title h1{font-size:clamp(40px,7vw,96px);line-height:1.04;font-weight:800;color:var(--text)}
+  .title .lede{margin-top:16px;font-size:15.5px;line-height:1.85;color:var(--muted);max-width:26em}
+  .panel{right:clamp(18px,2.4vw,40px);top:clamp(18px,2.4vw,44px);width:290px;background:rgba(25,29,35,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-radius:20px;corner-shape:superellipse(1.6);box-shadow:0 18px 40px -18px rgba(0,0,0,.7), inset 0 0 0 1px rgba(255,255,255,.04);padding:18px 18px 16px;}
+  .p-head{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+  .p-head .zh{font-size:14.5px;font-weight:700}
+  .p-head .en{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+  .row{display:block;margin:9px 0}
+  .row .lab{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--muted);margin-bottom:5px}
+  .row .lab b{font-family:var(--mono);font-weight:600;color:var(--text);font-size:12px}
+  .row .lab .arrow{display:inline-block;color:var(--teal);transition:transform .04s linear}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:999px;background:rgba(255,255,255,.10);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:999px;background:var(--teal);cursor:pointer;box-shadow:0 0 0 4px rgba(139,209,216,.18)}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border:none;border-radius:999px;background:var(--teal);cursor:pointer}
+  .colorrow{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;color:var(--muted);margin:9px 0}
+  .colorrow input[type=color]{-webkit-appearance:none;appearance:none;width:44px;height:24px;border:none;border-radius:8px;background:none;cursor:pointer}
+  .colorrow input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+  .colorrow input[type=color]::-webkit-color-swatch{border:none;border-radius:8px}
+  .btns{display:flex;gap:8px;margin-top:12px}
+  .btns button{flex:1;font-family:var(--zh);font-size:12.5px;padding:9px 6px;border:none;border-radius:12px;corner-shape:superellipse(1.4);background:rgba(255,255,255,.08);color:var(--text);cursor:pointer}
+  .btns button:hover{background:rgba(255,255,255,.16)}
+  .btns button.primary{background:var(--teal);color:#0c1416;font-weight:700}
+  .btns button.primary:hover{background:#a2dde2}
+  .btns button.wide{flex:1 1 100%;background:rgba(217,122,79,.9);color:#1a0f0a;font-weight:700}
+  .btns button.wide:hover{background:#e58a5f}
+  .meta{left:clamp(24px,4vw,64px);bottom:clamp(20px,3vw,40px);font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);pointer-events:none}
+  .meta span{color:var(--teal)}
+  html[data-preview="1"] .hud{display:none!important}
+  html[data-preview="1"] .leafetch{display:none}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div class="leafetch"></div>
+<a class="hud back" href="../../" title="返回图形生成库">← 返回</a>
+
+<div class="hud title">
+  <div class="eyebrow">WAVEDOT · WEBGL DOT FIELD</div>
+  <h1>动态波点背景</h1>
+  <p class="lede">规则点阵上跑一道方向性行波——可调方向、波长与波速，波峰处点更大更亮。数据烘焙进 GPU 缓冲，逐帧变化在着色器里算，CPU 极低。</p>
+</div>
+
+<aside class="hud panel" id="panel">
+  <div class="p-head"><span class="zh">参数</span><span class="en">controls</span></div>
+  <label class="row"><span class="lab"><span>方向</span><b><span class="arrow" id="arrow">→</span> <span id="v-dir">18°</span></b></span><input id="dir" type="range" min="0" max="360" step="1" value="18"></label>
+  <label class="row"><span class="lab"><span>波长</span><b id="v-wl">464</b></span><input id="wl" type="range" min="90" max="760" step="2" value="464"></label>
+  <label class="row"><span class="lab"><span>波速</span><b id="v-sp">0.44</b></span><input id="sp" type="range" min="0" max="2" step="0.01" value="0.44"></label>
+  <label class="row"><span class="lab"><span>起伏强度</span><b id="v-amp">0.00</b></span><input id="amp" type="range" min="0" max="1.2" step="0.01" value="0"></label>
+  <label class="row"><span class="lab"><span>点距</span><b id="v-gap">15</b></span><input id="gap" type="range" min="10" max="48" step="1" value="15"></label>
+  <label class="row"><span class="lab"><span>点径</span><b id="v-dot">0.8</b></span><input id="dot" type="range" min="0.4" max="4" step="0.1" value="0.8"></label>
+  <label class="row"><span class="lab"><span>随机</span><b id="v-rnd">0.31</b></span><input id="rnd" type="range" min="0" max="0.6" step="0.01" value="0.31"></label>
+  <label class="row"><span class="lab"><span>呼吸</span><b id="v-br">0.75</b></span><input id="br" type="range" min="0" max="1" step="0.01" value="0.75"></label>
+  <div class="colorrow"><span>点色</span><input id="cdot" type="color" value="#8bd1d8"></div>
+  <div class="colorrow"><span>底色</span><input id="cbg" type="color" value="#14171b"></div>
+  <div class="btns"><button id="play" class="primary">暂停</button><button id="full">全屏</button></div>
+  <div class="btns"><button id="png">导出 PNG</button><button id="copy">复制配置</button></div>
+  <div class="btns"><button id="webgl" class="wide">⤓ 导出 WebGL 代码</button></div>
+</aside>
+
+<div class="hud meta">webgl · 方向行波 · GPU 点位 · <span>wavedot</span></div>
+
+<script>
+/* ================= WebGL 引擎（单一来源：运行 & 导出都用它） ================= */
+const ENGINE_SRC = `
+window.initWaveDots = function(canvas, opt){
+  opt = Object.assign({dir:18,wl:464,sp:0.44,amp:0,gap:15,dot:0.8,rnd:0.31,br:0.75,dotColor:'#8bd1d8',bg:'#14171b',lens:150}, opt||{});
+  var gl = canvas.getContext('webgl',{antialias:true,alpha:false,preserveDrawingBuffer:true,powerPreference:'high-performance'}) || canvas.getContext('experimental-webgl');
+  if(!gl){ return {setParams:function(){},setRunning:function(){},stop:function(){},canvas:canvas,ok:false}; }
+  function hex(h){ h=h.replace('#',''); return [parseInt(h.substr(0,2),16)/255,parseInt(h.substr(2,2),16)/255,parseInt(h.substr(4,2),16)/255]; }
+  function sh(t,src){ var s=gl.createShader(t); gl.shaderSource(s,src); gl.compileShader(s); if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)) console.error('shader',gl.getShaderInfoLog(s)); return s; }
+  var VS='attribute vec2 a_pos;attribute float a_phase;attribute float a_size;uniform vec2 u_res,u_dir,u_lens;uniform float u_time,u_k,u_speed,u_amp,u_dot,u_rnd,u_pmax,u_breathFreq,u_lensR,u_dpr;uniform vec4 u_ripple;varying float vA;void main(){vec2 p=a_pos;float proj=dot(p,u_dir);float dirG=0.55+0.45*(proj/u_pmax);float breath=0.5+0.5*sin(u_time*u_breathFreq);float phase=proj*u_k-u_time*u_speed*6.2831853+a_phase*u_rnd*6.2831853;float w=0.5+0.5*sin(phase);float sizeMix=(1.0-u_amp*0.45)+u_amp*w;float size=u_dot*sizeMix*a_size*(0.9+0.1*breath);float a=(0.10+0.62*w)*dirG*(0.85+0.15*breath);float d=distance(p,u_lens);if(d<u_lensR){float kk=1.0-d/u_lensR;a+=kk*kk*0.5;size+=kk*kk*2.0;}if(u_ripple.w>0.001){float dr=abs(distance(p,u_ripple.xy)-u_ripple.z);if(dr<28.0){float kk=(1.0-dr/28.0)*u_ripple.w;a+=kk*0.5;size+=kk*2.0;}}vec2 cp=vec2(p.x/u_res.x*2.0-1.0,1.0-p.y/u_res.y*2.0);gl_Position=vec4(cp,0.0,1.0);gl_PointSize=max(1.0,size*2.0*u_dpr);vA=a;}';
+  var FS='precision mediump float;varying float vA;uniform vec3 u_color;void main(){vec2 d=gl_PointCoord-vec2(0.5);float r=length(d);float m=smoothstep(0.5,0.18,r);if(m<=0.0)discard;gl_FragColor=vec4(u_color,vA*m);}';
+  var prog=gl.createProgram(); gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS)); gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS)); gl.linkProgram(prog); gl.useProgram(prog);
+  var U={}; ['u_res','u_time','u_dir','u_k','u_speed','u_amp','u_dot','u_rnd','u_pmax','u_breathFreq','u_lens','u_lensR','u_dpr','u_color','u_ripple'].forEach(function(n){U[n]=gl.getUniformLocation(prog,n);});
+  var aPos=gl.getAttribLocation(prog,'a_pos'),aPh=gl.getAttribLocation(prog,'a_phase'),aSz=gl.getAttribLocation(prog,'a_size');
+  var posBuf=gl.createBuffer(),phBuf=gl.createBuffer(),szBuf=gl.createBuffer();
+  var count=0,W=0,H=0,ca=1,sa=0,k=0,pmax=1,dpr=1,running=true,raf=0,t0=0;
+  var mouse={x:-9999,y:-9999}; var ripple={x:0,y:0,r:0,life:0};
+  function recalc(){ var ang=opt.dir*Math.PI/180; ca=Math.cos(ang); sa=Math.sin(ang); k=2*Math.PI/opt.wl; pmax=(W*Math.abs(ca)+H*Math.abs(sa))||1; }
+  function build(){ recalc(); var nx=Math.floor(W/opt.gap)+1,ny=Math.floor(H/opt.gap)+1; count=nx*ny; var pos=new Float32Array(count*2),ph=new Float32Array(count),sz=new Float32Array(count); var i=0; for(var gy=0;gy<ny;gy++){var y=gy*opt.gap+0.5;for(var gx=0;gx<nx;gx++){pos[i*2]=gx*opt.gap+0.5;pos[i*2+1]=y;ph[i]=Math.random()*2-1;sz[i]=0.82+Math.random()*0.36;i++;}}
+    gl.bindBuffer(gl.ARRAY_BUFFER,posBuf);gl.bufferData(gl.ARRAY_BUFFER,pos,gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER,phBuf);gl.bufferData(gl.ARRAY_BUFFER,ph,gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER,szBuf);gl.bufferData(gl.ARRAY_BUFFER,sz,gl.STATIC_DRAW); }
+  function resize(){ dpr=Math.min(window.devicePixelRatio||1,2); W=canvas.clientWidth||window.innerWidth; H=canvas.clientHeight||window.innerHeight; canvas.width=Math.round(W*dpr); canvas.height=Math.round(H*dpr); gl.viewport(0,0,canvas.width,canvas.height); build(); }
+  function bind(loc,buf,size){ gl.bindBuffer(gl.ARRAY_BUFFER,buf); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,size,gl.FLOAT,false,0,0); }
+  function draw(now){ var t=(now-t0)/1000; var bg=hex(opt.bg); gl.clearColor(bg[0],bg[1],bg[2],1); gl.clear(gl.COLOR_BUFFER_BIT); gl.useProgram(prog);
+    var dc=hex(opt.dotColor);
+    gl.uniform2f(U.u_res,W,H); gl.uniform1f(U.u_time,t); gl.uniform2f(U.u_dir,ca,sa); gl.uniform1f(U.u_k,k); gl.uniform1f(U.u_speed,opt.sp); gl.uniform1f(U.u_amp,opt.amp); gl.uniform1f(U.u_dot,opt.dot); gl.uniform1f(U.u_rnd,opt.rnd); gl.uniform1f(U.u_pmax,pmax); gl.uniform1f(U.u_breathFreq,opt.br*1.4); gl.uniform2f(U.u_lens,mouse.x,mouse.y); gl.uniform1f(U.u_lensR,opt.lens); gl.uniform1f(U.u_dpr,dpr); gl.uniform3f(U.u_color,dc[0],dc[1],dc[2]);
+    if(ripple.life>0){ ripple.r+=11; ripple.life-=0.02; if(ripple.life<0) ripple.life=0; gl.uniform4f(U.u_ripple,ripple.x,ripple.y,ripple.r,ripple.life); } else { gl.uniform4f(U.u_ripple,0,0,0,0); }
+    bind(aPos,posBuf,2); bind(aPh,phBuf,1); bind(aSz,szBuf,1); gl.drawArrays(gl.POINTS,0,count); }
+  function loop(now){ if(!running) return; if(!t0) t0=now; draw(now); raf=requestAnimationFrame(loop); }
+  function onMove(e){ mouse.x=e.clientX; mouse.y=e.clientY; }
+  function onLeave(){ mouse.x=-9999; mouse.y=-9999; }
+  function onClick(e){ ripple.x=e.clientX; ripple.y=e.clientY; ripple.r=0; ripple.life=1; }
+  window.addEventListener('mousemove',onMove); window.addEventListener('mouseleave',onLeave); window.addEventListener('click',onClick); window.addEventListener('resize',resize);
+  gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+  resize(); raf=requestAnimationFrame(loop);
+  return { canvas:canvas, opt:opt, ok:true,
+    setParams:function(p){ var og=opt.gap; Object.assign(opt,p); if(p.gap!==undefined && p.gap!==og) build(); else recalc(); },
+    setRunning:function(r){ running=r; if(r){ t0=0; raf=requestAnimationFrame(loop);} else { cancelAnimationFrame(raf);} },
+    stop:function(){ running=false; cancelAnimationFrame(raf); window.removeEventListener('mousemove',onMove); window.removeEventListener('mouseleave',onLeave); window.removeEventListener('click',onClick); window.removeEventListener('resize',resize); }
+  };
+};
+`;
+new Function(ENGINE_SRC)();   // 注册 window.initWaveDots
+
+/* ================= 应用层：控件 ↔ 引擎 ================= */
+(function(){
+  const preview = new URLSearchParams(location.search).has('preview');
+  if(preview) document.documentElement.dataset.preview='1';
+  const cv=document.getElementById('cv');
+  const P={dir:18,wl:464,sp:0.44,amp:0,gap:15,dot:0.8,rnd:0.31,br:0.75,dotColor:'#8bd1d8',bg:'#14171b',lens:150};
+  /* 允许用 URL 覆盖配色（预览卡片 / 嵌入用）：?bg=%23rrggbb&dot=%23rrggbb */
+  try{
+    const q=new URLSearchParams(location.search);
+    const hex=s=>{ s=(s||'').trim(); if(!/^#?[0-9a-fA-F]{6}$/.test(s)) return null; return '#'+s.replace('#',''); };
+    const bg=hex(q.get('bg')); if(bg) P.bg=bg;
+    const dt=hex(q.get('dot')); if(dt) P.dotColor=dt;
+  }catch(e){}
+  const ctrl=window.initWaveDots(cv, Object.assign({},P));
+  const $=id=>document.getElementById(id);
+  const fmt={dir:v=>Math.round(v)+'°',wl:v=>Math.round(v),sp:v=>(+v).toFixed(2),amp:v=>(+v).toFixed(2),gap:v=>Math.round(v),dot:v=>(+v).toFixed(1),rnd:v=>(+v).toFixed(2),br:v=>(+v).toFixed(2)};
+  const map={dir:['dir','v-dir'],wl:['wl','v-wl'],sp:['sp','v-sp'],amp:['amp','v-amp'],gap:['gap','v-gap'],dot:['dot','v-dot'],rnd:['rnd','v-rnd'],br:['br','v-br']};
+  Object.keys(map).forEach(id=>{ const inp=$(id); if(!inp)return; inp.addEventListener('input',()=>{ P[id]=parseFloat(inp.value); $(map[id][1]).textContent=fmt[id](inp.value); if(id==='dir')$('arrow').style.transform='rotate('+(P.dir-90)+'deg)'; ctrl.setParams(P); }); });
+  $('cdot').addEventListener('input',e=>{P.dotColor=e.target.value; ctrl.setParams(P);});
+  $('cbg').addEventListener('input',e=>{P.bg=e.target.value; ctrl.setParams(P);});
+  $('arrow').style.transform='rotate('+(P.dir-90)+'deg)';
+  $('play').addEventListener('click',e=>{ const r=e.target.dataset.run!=='0'; e.target.dataset.run=r?'0':'1'; e.target.textContent=r?'播放':'暂停'; e.target.classList.toggle('primary',!r); ctrl.setRunning(!r); });
+  $('full').addEventListener('click',()=>{ if(!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.(); });
+  $('png').addEventListener('click',()=>{ const a=document.createElement('a'); a.download='wavedot.png'; a.href=cv.toDataURL('image/png'); a.click(); });
+  $('copy').addEventListener('click',()=>{ try{ navigator.clipboard.writeText(JSON.stringify(P)); $('copy').textContent='已复制'; setTimeout(()=>$('copy').textContent='复制配置',1200);}catch(e){} });
+  function download(name,text){ const b=new Blob([text],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),2000); }
+  $('webgl').addEventListener('click',()=>{
+    const cfg=JSON.stringify(P,null,2);
+    const head='<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>WaveDots · WebGL</title>'+
+      '<style>html,body{margin:0;height:100%;overflow:hidden;background:'+P.bg+'}canvas{display:block;width:100vw;height:100vh}</style></head><body>'+
+      '<canvas id="c"></canvas>\n<script>\n';
+    const tail='\nwindow.initWaveDots(document.getElementById("c"), '+cfg+');\n<'+'/script></body></html>';
+    download('wavedot-webgl.html', head+ENGINE_SRC+tail);
+  });
+  // 同步控件初始值（含默认即用户配置）
+  Object.keys(map).forEach(id=>{ const inp=$(id); if(inp){ inp.value=P[id]; $(map[id][1]).textContent=fmt[id](P[id]); } });
+  $('cdot').value=P.dotColor; $('cbg').value=P.bg;
+})();
+</script>
+</body>
+</html>

@@ -8,11 +8,25 @@
       "id": "stylekit",
       "zh": "噪声边缘组件",
       "en": "StyleKit",
+      "name": "StyleKit",
       "sub": "会呼吸的网页样式组件",
       "desc": "纯色块，边缘由三维噪声沿法线实时生成，连续可调。五种底形——矩形、椭圆、多边形、星形、SVG 路径；图形上直接拖把手缩放旋转；导出 HTML、CSS、SVG、JSON 或 WebM 录屏。",
       "tags": ["canvas", "noise", "svg", "export"],
       "path": "apps/stylekit/",
       "accent": "#ffc100",
+      "status": "ready"
+    },
+    {
+      "id": "wavedot",
+      "zh": "动态波点背景",
+      "en": "WaveDots",
+      "name": "WaveDots",
+      "sub": "有方向感的呼吸波点场",
+      "desc": "规则点阵上跑一道方向性行波：可调方向、波长、波速与起伏强度，波峰处点更大更亮，每点带随机微差与缓慢呼吸。鼠标透镜 + 点击涟漪，一键导出 PNG，可嵌进网页或当作动态背景。",
+      "tags": ["canvas", "wave", "dots", "background"],
+      "path": "apps/wavedot/",
+      "previewBg": "#1b2129",
+      "accent": "#8bd1d8",
       "status": "ready"
     }
   ]

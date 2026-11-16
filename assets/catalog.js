@@ -49,7 +49,10 @@
     const badge = el('span', 'badge',
       String(i + 1).padStart(2, '0') + (app.status === 'ready' ? ' · 实时' : ' · 开发中'));
     const ifr = document.createElement('iframe');
-    ifr.dataset.src = app.path + (app.path.includes('?') ? '&' : '?') + 'preview=1';
+    let qs = 'preview=1';
+    // 应用若指定了 previewBg，把底色透给应用（卡片里才能和页面底色分开）
+    if (app.previewBg) qs += '&bg=' + encodeURIComponent(app.previewBg);
+    ifr.dataset.src = app.path + (app.path.includes('?') ? '&' : '?') + qs;
     ifr.title = zh + ' 实时预览';
     ifr.setAttribute('scrolling', 'no');
     ifr.setAttribute('tabindex', '-1');
@@ -115,11 +118,14 @@
     .then(r => r.ok ? r.json() : Promise.reject(new Error('apps.json ' + r.status)))
     .then(data => {
       const apps = (data.apps || []).filter(a => a && a.id && a.path);
-      if (data.name) { $('brand-zh').textContent = data.name; $('foot-zh').textContent = data.name; }
-      if (data.nameEn) $('brand-en').textContent = data.nameEn;
-      if (data.intro) $('tagline').textContent = data.intro;
-      if (data.taglineEn) $('tagline-en').textContent = data.taglineEn;
-      $('app-count').textContent = apps.length + ' 个工具';
+
+      // 所有可选文案都走 setText：节点缺失时静默跳过，不让整页报「读取 apps.json 失败」
+      const setText = (id, v) => { const e = $(id); if (e) e.textContent = v; };
+
+      if (data.name) setText('foot-zh', data.name);
+      if (data.intro) setText('tagline', data.intro);
+      if (data.taglineEn) setText('tagline-en', data.taglineEn);
+      setText('app-count', apps.length + ' 个工具');
       document.title = (data.name || 'kenzakiABE9 的图形生成库') + ' · 网页图形与样式生成工具集';
 
       grid.innerHTML = '';
@@ -133,8 +139,9 @@
       setTimeout(fitAll, 300);
     })
     .catch(err => {
+      console.error('[catalog]', err);
       grid.innerHTML = '';
-      const p = el('p', 'lede', '读取 apps.json 失败：' + err.message);
+      const p = el('p', 'lede', '读取 apps.json 失败：' + (err && err.message ? err.message : err));
       p.style.gridColumn = '1 / -1';
       grid.append(p);
     });

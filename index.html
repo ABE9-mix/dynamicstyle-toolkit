@@ -5,21 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>kenzakiABE9 的图形生成库 · 网页图形与样式生成工具集</title>
 <meta name="description" content="kenzakiABE9 的图形生成库：一组能直接在网页里跑的图形与样式生成工具。零依赖、无构建，双击就能跑，也能单独嵌进任何页面。">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2314171b'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23d97a4f'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="assets/catalog.css">
+<link rel="icon" href="assets/logo.svg">
+<link rel="stylesheet" href="assets/catalog.css?v=4">
 </head>
 <body>
 
-<header class="hero">
-  <div class="hero-top">
-    <div class="brand">
-      <span class="dot"></span>
-      <span class="brand-zh" id="brand-zh">kenzakiABE9 的图形生成库</span>
-      <span class="brand-en" id="brand-en">KENZAKIABE9 · GRAPHICS LIBRARY</span>
-    </div>
-    <button id="theme-btn" class="ghost-btn" title="切换明暗">◐ 明暗</button>
-  </div>
+<button id="theme-btn" class="theme-fab" title="切换明暗" aria-label="切换明暗">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="7.4" fill="none" stroke="currentColor" stroke-width="1.7"/>
+    <path d="M12 4.6a7.4 7.4 0 0 0 0 14.8z" fill="currentColor"/>
+  </svg>
+</button>
 
+<header class="hero">
   <p class="eyebrow">KENZAKIABE9 · GRAPHICS LIBRARY</p>
 
   <h1 class="display">
@@ -50,6 +48,6 @@
   <span class="foot-en">BY KENZAKIABE9</span>
 </footer>
 
-<script src="assets/catalog.js"></script>
+<script src="assets/catalog.js?v=4"></script>
 </body>
 </html>

@@ -79,7 +79,7 @@
     const d = el('div', 'card soon');
     d.append(
       el('div', 'plus', '＋'),
-      el('div', 't', '下一个应用'),
+      el('div', 't', '下一个工具'),
       el('div', 'h', 'apps/<id>/ + apps.json 一条')
     );
     return d;
@@ -119,8 +119,8 @@
       if (data.nameEn) $('brand-en').textContent = data.nameEn;
       if (data.intro) $('tagline').textContent = data.intro;
       if (data.taglineEn) $('tagline-en').textContent = data.taglineEn;
-      $('app-count').textContent = apps.length + ' 个应用';
-      document.title = (data.name || '动态样式工具集') + ' · 可参数化的网页样式组件';
+      $('app-count').textContent = apps.length + ' 个工具';
+      document.title = (data.name || 'kenzakiABE9 的图形生成库') + ' · 网页图形与样式生成工具集';
 
       grid.innerHTML = '';
       apps.forEach((app, i) => grid.append(makeCard(app, i)));

@@ -28,7 +28,7 @@ if (existsSync(join(root, 'assets'))) cpSync(join(root, 'assets'), join(out, 'as
 
 /* 各应用 */
 const manifest = JSON.parse(readFileSync(join(root, 'apps.json'), 'utf8'));
-const apps = (manifest.apps || []).filter(a => a && a.path);
+const apps = (manifest.apps || []).filter(a => a && a.path);   // 每个元素是一个工具
 const copied = [];
 
 for (const app of apps) {
@@ -60,5 +60,5 @@ let total = 0, count = 0;
 })(out);
 
 console.log(`dist-upload/  ${count} 个文件  ${(total / 1024).toFixed(1)} KB`);
-console.log('  应用:');
+console.log('  工具:');
 for (const c of copied) console.log('    ' + c);

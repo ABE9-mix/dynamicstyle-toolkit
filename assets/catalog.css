@@ -123,6 +123,14 @@ a { color: inherit; }
   font-style: normal;
   color: var(--clay);
 }
+/* 名字那一行：拉丁字母，稍小、收紧字距，让下面的中文成为视觉主体 */
+.display .line-name {
+  font-family: "OPPO Sans", "MiSans", system-ui, sans-serif;
+  font-size: .64em;
+  letter-spacing: -.02em;
+  line-height: 1.14;
+  color: var(--text);
+}
 
 /* 英文辅助行：中文标题之后，小一号、等宽、弱化 */
 .en-sub {

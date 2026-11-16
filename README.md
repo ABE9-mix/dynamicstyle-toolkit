@@ -1,6 +1,8 @@
-# Dynamic Style Toolkit
+# kenzakiABE9 的图形生成库
 
-一组**可参数化、可实时预览**的网页样式组件。每个组件都是一个独立、自包含的静态应用：
+**KENZAKIABE9 · GRAPHICS LIBRARY**
+
+一组能直接在网页里跑的**图形与样式生成工具**。每个工具都是一个独立、自包含的静态应用：
 没有构建步骤、没有依赖，双击 `index.html` 就能跑，也能单独嵌进任何页面。
 
 站点根目录就是**总目录页**（catalog）：列出所有组件，每个卡片里跑的是**真·实时预览**
@@ -15,7 +17,7 @@
 ```
 /
 ├─ index.html            总目录页
-├─ apps.json             应用清单（总目录读它渲染）
+├─ apps.json             工具清单（总目录读它渲染）
 ├─ DESIGN.md             设计方法：中文主导的排版系统（新应用照它做）
 ├─ assets/
 │  ├─ catalog.css        总目录样式
@@ -23,7 +25,7 @@
 ├─ tools/
 │  └─ build-site.mjs     打包出 dist-upload/（可直传静态托管）
 └─ apps/
-   └─ stylekit/          应用 ①：StyleKit 噪声边缘组件生成器
+   └─ stylekit/          工具 ①：StyleKit 噪声边缘组件生成器
       ├─ index.html
       ├─ css/ src/ dist/
       ├─ tools/          该应用的开发/验收脚本（不进产物）
@@ -44,7 +46,7 @@ py -3 -m http.server 8791 --bind 127.0.0.1
 
 ---
 
-## 新增一个应用（3 步）
+## 新增一个工具（3 步）
 
 1. **建目录**：`apps/<id>/`，里面至少要有 `index.html`。相对路径写成同目录相对
    （`css/…`、`src/…`），因为整套站点会按原样搬到静态托管上。
@@ -73,9 +75,9 @@ py -3 -m http.server 8791 --bind 127.0.0.1
 
 ---
 
-## 应用清单
+## 工具清单
 
-| # | 应用 | 说明 | 目录 |
+| # | 工具 | 说明 | 目录 |
 |---|---|---|---|
 | 01 | **StyleKit** | 噪声边缘组件生成器：纯色块 + 三维噪声沿法线实时生成波浪边缘；五种底形（矩形/椭圆/多边形/星形/SVG 路径）、图形上拖把手缩放旋转、导出 HTML / CSS / SVG / JSON / WebM | [`apps/stylekit/`](apps/stylekit/README.md) |
 

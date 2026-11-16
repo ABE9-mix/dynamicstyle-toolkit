@@ -69,39 +69,25 @@ a { color: inherit; }
 .hero {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 34px 28px 12px;
+  padding: 74px 28px 12px;
 }
-.hero-top {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 58px;
-}
-.brand { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
-.brand .logo {
-  width: 22px; height: 22px; flex: none;
-  align-self: center;
-  border-radius: 7px;
-  corner-shape: superellipse(1.6);
-  box-shadow: 0 0 18px -4px rgba(217,122,79,.55);
-}
-.brand-zh {
-  font-size: 14.5px; font-weight: 650; letter-spacing: .02em;
-}
-.brand-en {
-  font-family: var(--mono); font-size: 10.5px; letter-spacing: .16em;
-  text-transform: uppercase; color: var(--dim);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.ghost-btn {
-  font-family: var(--zh); font-size: 12.5px;
-  color: var(--muted);
+/* 明暗切换：独立角标，不占首屏内容 */
+.theme-fab {
+  position: fixed; right: 22px; top: 20px; z-index: 20;
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  padding: 0; border: 0;
+  border-radius: 50%; corner-shape: round;
   background: var(--card);
-  border: 0; border-radius: 999px; corner-shape: round;
-  padding: 7px 15px;
-  cursor: pointer; flex: none;
-  transition: background .15s, color .15s;
+  color: #b9c3cf;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: background .15s, color .15s, transform .12s;
 }
-.ghost-btn:hover { background: var(--card-hover); color: var(--text); }
+.theme-fab:hover { background: var(--card-hover); color: var(--text); }
+.theme-fab:active { transform: scale(.94); }
+.theme-fab svg { width: 19px; height: 19px; display: block; }
 
 /* 眉标：只有英文，小、宽字距 —— 辅助角色 */
 .eyebrow {
@@ -294,8 +280,6 @@ html[data-theme="light"] .shot .badge { background: rgba(255,255,255,.75); }
 
 @media (max-width: 720px) {
   .hero { padding: 26px 18px 8px; }
-  .hero-top { margin-bottom: 40px; flex-wrap: wrap; }
-  .brand-en { display: none; }
   .grid { padding: 18px 18px 32px; grid-template-columns: 1fr; gap: 18px; }
   .foot { padding: 18px 18px 40px; }
   .tagline-zh { margin-left: 0; width: 100%; }

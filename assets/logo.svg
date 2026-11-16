@@ -1,22 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="kenzakiABE9 图形生成库">
-  <title>kenzakiABE9 图形生成库</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-label="图标占位">
+  <title>图标占位 · iOS 标准图标网格</title>
+  <desc>按 iOS App Icon 模板：1024 画布、22.37% 连续曲率圆角底板、Ø824 圆形 / 728 方形 关键线，中心为占位字形。</desc>
+
   <defs>
-    <linearGradient id="tile" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#e08a5f"/>
-      <stop offset="1" stop-color="#c96a41"/>
+    <!-- iOS 图标底板：1024 画布，圆角 229（≈22.37%） -->
+    <clipPath id="iosMask">
+      <rect width="1024" height="1024" rx="229" ry="229"/>
+    </clipPath>
+    <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3a434f"/>
+      <stop offset="1" stop-color="#242b34"/>
     </linearGradient>
   </defs>
 
-  <!-- 底板：超椭圆近似（半径 13 / 边长 48） -->
-  <rect width="48" height="48" rx="13" ry="13" fill="url(#tile)"/>
+  <g clip-path="url(#iosMask)">
+    <rect width="1024" height="1024" fill="url(#plate)"/>
 
-  <!-- 字母 K：一竖 + 两条波浪臂，象征「图形生成」 -->
-  <g fill="none" stroke="#fdf6df" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M16.2 13.4 V34.6"/>
-    <path d="M16.2 24 C 21.4 23.4, 23.8 16.3, 30.2 13.6"/>
-    <path d="M16.2 24 C 21.4 24.6, 23.8 31.7, 30.2 34.4"/>
+    <!-- 关键线：圆形 Ø824、方形 728、十字轴线（占位用，大尺寸才可见） -->
+    <g fill="none" stroke="rgba(255,255,255,.16)" stroke-width="4">
+      <circle cx="512" cy="512" r="412"/>
+      <rect x="148" y="148" width="728" height="728" rx="8"/>
+      <path d="M512 24V1000M24 512H1000"/>
+    </g>
+
+    <!-- 中心占位字形：一个圆角方框 + 中心点 -->
+    <g fill="none" stroke="rgba(255,255,255,.45)" stroke-width="24" stroke-linejoin="round">
+      <rect x="360" y="360" width="304" height="304" rx="76"/>
+    </g>
+    <circle cx="512" cy="512" r="24" fill="rgba(255,255,255,.45)"/>
   </g>
-
-  <!-- 波点：呼应点阵/波形 -->
-  <circle cx="32.4" cy="13.2" r="2.4" fill="#8bd1d8"/>
-  </svg>
+</svg>

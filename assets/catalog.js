@@ -115,8 +115,10 @@
     .then(r => r.ok ? r.json() : Promise.reject(new Error('apps.json ' + r.status)))
     .then(data => {
       const apps = (data.apps || []).filter(a => a && a.id && a.path);
-      if (data.name) { $('brand-zh').textContent = data.name; $('foot-zh').textContent = data.name; }
-      if (data.nameEn) $('brand-en').textContent = data.nameEn;
+      if (data.name) {
+        const fz = $('foot-zh'); if (fz) fz.textContent = data.name;
+        document.title = data.name + ' · 网页图形与样式生成工具集';
+      }
       if (data.intro) $('tagline').textContent = data.intro;
       if (data.taglineEn) $('tagline-en').textContent = data.taglineEn;
       $('app-count').textContent = apps.length + ' 个工具';

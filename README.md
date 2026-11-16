@@ -20,9 +20,11 @@
 ├─ apps.json             工具清单（总目录读它渲染）
 ├─ DESIGN.md             设计方法：中文主导的排版系统（新应用照它做）
 ├─ assets/
-│  ├─ logo.svg           站点 Logo（矢量，页头 + favicon）
+│  ├─ logo.svg           站点图标（当前为 iOS 网格占位，矢量 favicon）
 │  ├─ catalog.css        总目录样式
 │  └─ catalog.js         总目录逻辑（渲染卡片 + 懒加载实时预览）
+├─ brand/
+│  └─ logo-k.svg        早期 K 标设计稿（暂存，不进产物）
 ├─ tools/
 │  └─ build-site.mjs     打包出 dist-upload/（可直传静态托管）
 └─ apps/
@@ -101,9 +103,11 @@ git switch main && git merge --no-ff dev   # 验收后合并
 
 ## 品牌
 
-Logo：`assets/logo.svg`（矢量，48×48 视框，任意尺寸清晰）。
-陶土色超椭圆底板 + 奶油色「K」波浪笔画 + 青色波点，同时指向「kenzaki」与「图形生成」。
-总目录页头、三个页面的 favicon 都用它。
+**图标设计暂停中**，当前 `assets/logo.svg` 是 **iOS 标准 App Icon 网格占位**：
+1024 画布、圆角 22.37%（≈229）、Ø824 圆形 + 728 方形关键线 + 中心占位字形。
+16px 下是干净的中性方砖，正好当 favicon 占位。
+
+之前的「K」标设计稿保留在 `brand/logo-k.svg`（不参与打包），等图标定了再启用。
 
 ## 打包 / 部署（腾讯 EdgeOne Pages）
 

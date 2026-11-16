@@ -8,7 +8,7 @@
 站点根目录就是**总目录页**（catalog）：列出所有组件，每个卡片里跑的是**真·实时预览**
 （一个 `?preview=1` 的 iframe，等比缩放），点进去就是完整工作台。
 
-线上：<https://github.com/ABE9-mix/dynamicstyle-toolkit>（Git 直连 **Netlify** 部署）
+线上：<https://illustrious-entremet-5db35f.netlify.app/>　·　仓库：<https://github.com/ABE9-mix/dynamicstyle-toolkit>
 
 ---
 
@@ -94,13 +94,18 @@ py -3 -m http.server 8791 --bind 127.0.0.1
 
 | 分支 | 角色 | 说明 |
 |---|---|---|
-| `main` | **稳定线** | 只接收验收过的提交；Netlify 从这里构建发布 |
-| `dev` | **探索线** | 现阶段的新功能、新工具、重构都先投这里，跑通了再合回 `main` |
+| `dev` | **探索线（默认工作分支）** | 所有开发都在这里；Netlify 只连 `main`，所以推 `dev` **不消耗构建额度** |
+| `main` | **发布线** | 只在效果验收达标后合并进来；**每次往 main 推 = 一次 Netlify 构建（计费）**，所以攒一批再合 |
 
 ```powershell
-git switch dev      # 日常开发
-git switch main && git merge --no-ff dev   # 验收后合并
+git switch dev                                  # 日常开发（本地起服务看效果）
+py -3 -m http.server 8791 --bind 127.0.0.1
+# …验收 OK 后…
+git switch main && git merge --no-ff dev && git push origin main   # 这一步才会触发部署
 ```
+
+> Netlify 按构建次数计费，所以：**在 dev 上把东西做完、本地验完，再合并到 main**。
+> `netlify.toml` 里还加了 `ignore` 规则 —— 只改 README / 设计文档这类非站点文件时，构建会自动跳过。
 
 ## 品牌
 

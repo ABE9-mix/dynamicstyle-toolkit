@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dynamic Style Toolkit · 可参数化的网页样式组件集</title>
-<meta name="description" content="A small collection of live, parameter-driven web style components. 纯静态、无构建、可单独嵌入。">
+<title>动态样式工具集 · 可参数化的网页样式组件</title>
+<meta name="description" content="一组可参数化、可实时预览的网页样式组件。纯静态、零依赖，双击就能跑，也能单独嵌进任何页面。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2314171b'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23d97a4f'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/catalog.css">
 </head>
@@ -12,17 +12,24 @@
 
 <header class="hero">
   <div class="hero-top">
-    <div class="brand"><span class="dot"></span><span id="brand-name">Dynamic Style Toolkit</span></div>
-    <button id="theme-btn" class="ghost-btn" title="切换明/暗">◐ 明暗</button>
+    <div class="brand">
+      <span class="dot"></span>
+      <span class="brand-zh" id="brand-zh">动态样式工具集</span>
+      <span class="brand-en" id="brand-en">Dynamic Style Toolkit</span>
+    </div>
+    <button id="theme-btn" class="ghost-btn" title="切换明暗">◐ 明暗</button>
   </div>
 
-  <h1 class="title">
-    <span class="line">Playful,</span>
-    <span class="line">parameter-driven</span>
-    <span class="line"><em>style components.</em></span>
+  <p class="eyebrow">DYNAMIC STYLE TOOLKIT</p>
+
+  <h1 class="display">
+    <span class="line">会呼吸的</span>
+    <span class="line"><em>网页样式</em>组件</span>
   </h1>
 
-  <p class="lede" id="tagline">A small collection of live, parameter-driven web style components.</p>
+  <p class="en-sub" id="tagline-en">A small collection of live, parameter-driven style components.</p>
+
+  <p class="lede" id="tagline">一组可参数化、可实时预览的网页样式组件。纯静态、零依赖，双击就能跑，也能单独嵌进任何页面。</p>
 
   <div class="meta">
     <span id="app-count">— 个应用</span>
@@ -36,9 +43,11 @@
 <main class="grid" id="grid" aria-label="应用列表"></main>
 
 <footer class="foot">
-  <span>Dynamic Style Toolkit</span>
+  <span id="foot-zh">动态样式工具集</span>
   <span class="sep"></span>
   <span>新增应用：把目录放进 <code>apps/</code>，再往 <code>apps.json</code> 加一条</span>
+  <span class="sep"></span>
+  <span class="foot-en">DESIGNED WITH A CHINESE-FIRST TYPE SYSTEM</span>
 </footer>
 
 <script src="assets/catalog.js"></script>

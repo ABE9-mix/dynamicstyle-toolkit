@@ -1,15 +1,14 @@
 /* ============================================================
-   Dynamic Style Toolkit · 总目录逻辑
+   动态样式工具集 · 总目录逻辑
    读 apps.json → 渲染卡片 → 懒加载每个应用的实时预览 iframe
-   新增应用只需要：apps/<id>/ 目录 + apps.json 里加一条
+   新增应用：apps/<id>/ 目录 + apps.json 加一条（中文为主、英文为辅）
    ============================================================ */
 (function () {
   'use strict';
 
   const $ = id => document.getElementById(id);
   const grid = $('grid');
-  /** 应用预览统一按 1440×900 的视口渲染，再等比缩放进卡片 */
-  const FRAME_W = 1440, FRAME_H = 900;
+  const FRAME_W = 1440, FRAME_H = 900;   // 预览按 1440×900 渲染，再等比缩放进卡片
 
   /* ---------------- 主题 ---------------- */
   const THEME_KEY = 'dst:theme';
@@ -18,8 +17,10 @@
     try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
   }
   (function initTheme() {
-    let t = null;
-    try { t = localStorage.getItem(THEME_KEY); } catch (e) {}
+    // 允许 ?theme=dark|light 强制指定（便于截图/嵌入），否则读存档，再否则跟随系统
+    const q = new URLSearchParams(location.search).get('theme');
+    let t = (q === 'dark' || q === 'light') ? q : null;
+    if (!t) { try { t = localStorage.getItem(THEME_KEY); } catch (e) {} }
     if (!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
     applyTheme(t);
   })();
@@ -27,7 +28,7 @@
     applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
   });
 
-  /* ---------------- 卡片 ---------------- */
+  /* ---------------- 小工具 ---------------- */
   function el(tag, cls, text) {
     const n = document.createElement(tag);
     if (cls) n.className = cls;
@@ -35,35 +36,40 @@
     return n;
   }
 
+  /* 卡片：中文名为主、英文名为辅 */
   function makeCard(app, i) {
+    const zh = app.zh || app.name || app.id;
+    const en = app.en || app.id;
+
     const a = el('a', 'card');
     a.href = app.path;
-    a.setAttribute('aria-label', (app.name || app.id) + ' · 打开');
+    a.setAttribute('aria-label', zh + (app.sub ? '·' + app.sub : '') + ' 打开');
 
     const shot = el('div', 'shot');
-    const badge = el('span', 'badge', String(i + 1).padStart(2, '0') + ' / ' + (app.status === 'ready' ? 'LIVE' : 'WIP'));
+    const badge = el('span', 'badge',
+      String(i + 1).padStart(2, '0') + (app.status === 'ready' ? ' · 实时' : ' · 开发中'));
     const ifr = document.createElement('iframe');
-    // 懒加载：先只记 data-src，进了视口再真加载
     ifr.dataset.src = app.path + (app.path.includes('?') ? '&' : '?') + 'preview=1';
-    ifr.title = (app.name || app.id) + ' 实时预览';
+    ifr.title = zh + ' 实时预览';
     ifr.setAttribute('scrolling', 'no');
     ifr.setAttribute('tabindex', '-1');
     ifr.setAttribute('aria-hidden', 'true');
     ifr.addEventListener('load', () => ifr.classList.add('loaded'));
-    const enter = el('span', 'enter', '↗');
-    shot.append(ifr, badge, enter);
+    shot.append(ifr, badge, el('span', 'enter', '↗'));
 
     const body = el('div', 'body');
-    const row1 = el('div', 'row1');
-    row1.append(
+    const head = el('div', 'head');
+    head.append(
       el('span', 'idx', String(i + 1).padStart(2, '0')),
-      el('span', 'name', app.name || app.id)
+      el('span', 'name-zh', zh),
+      el('span', 'name-en', en)
     );
-    if (app.sub) row1.append(el('span', 'sub', app.sub));
+    if (app.sub) head.append(el('span', 'tagline-zh', app.sub));
+
     const desc = el('p', 'desc', app.desc || '');
     const tags = el('div', 'tags');
     (app.tags || []).forEach(t => tags.append(el('span', 'tag', t)));
-    body.append(row1, desc, tags);
+    body.append(head, desc, tags);
 
     a.append(shot, body);
     return a;
@@ -79,7 +85,7 @@
     return d;
   }
 
-  /* ---------------- 缩放 iframe 适配卡片 ---------------- */
+  /* ---------------- 缩放 iframe ---------------- */
   const frames = [];
   function fitAll() {
     for (const f of frames) {
@@ -90,7 +96,6 @@
   }
   addEventListener('resize', fitAll, { passive: true });
 
-  /* ---------------- 懒加载 ---------------- */
   let io = null;
   function observe(ifr) {
     if (!('IntersectionObserver' in window)) { ifr.src = ifr.dataset.src; return; }
@@ -110,10 +115,12 @@
     .then(r => r.ok ? r.json() : Promise.reject(new Error('apps.json ' + r.status)))
     .then(data => {
       const apps = (data.apps || []).filter(a => a && a.id && a.path);
-      if (data.name) $('brand-name').textContent = data.name;
-      if (data.tagline) $('tagline').textContent = data.tagline;
+      if (data.name) { $('brand-zh').textContent = data.name; $('foot-zh').textContent = data.name; }
+      if (data.nameEn) $('brand-en').textContent = data.nameEn;
+      if (data.intro) $('tagline').textContent = data.intro;
+      if (data.taglineEn) $('tagline-en').textContent = data.taglineEn;
       $('app-count').textContent = apps.length + ' 个应用';
-      document.title = (data.name || 'Dynamic Style Toolkit') + ' · 可参数化的网页样式组件集';
+      document.title = (data.name || '动态样式工具集') + ' · 可参数化的网页样式组件';
 
       grid.innerHTML = '';
       apps.forEach((app, i) => grid.append(makeCard(app, i)));
@@ -122,7 +129,6 @@
       frames.length = 0;
       document.querySelectorAll('.shot iframe').forEach(f => { frames.push(f); observe(f); });
       fitAll();
-      // 首屏两帧等布局稳定再量一次
       requestAnimationFrame(fitAll);
       setTimeout(fitAll, 300);
     })

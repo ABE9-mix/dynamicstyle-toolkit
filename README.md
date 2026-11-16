@@ -16,6 +16,7 @@
 /
 ├─ index.html            总目录页
 ├─ apps.json             应用清单（总目录读它渲染）
+├─ DESIGN.md             设计方法：中文主导的排版系统（新应用照它做）
 ├─ assets/
 │  ├─ catalog.css        总目录样式
 │  └─ catalog.js         总目录逻辑（渲染卡片 + 懒加载实时预览）

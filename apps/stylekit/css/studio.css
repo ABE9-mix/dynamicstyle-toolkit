@@ -588,3 +588,18 @@ body.preview-mode .hud,
 body.preview-mode .toast {
   display: none !important;
 }
+
+/* ---------- 返回总目录 ---------- */
+.back {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 26px; padding: 0 11px;
+  border-radius: 999px; corner-shape: round;
+  background: rgba(255,255,255,.07);
+  color: var(--muted);
+  font-size: 12px; line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+.back:hover { background: rgba(255,255,255,.14); color: var(--text); }
+.back:active { transform: translateY(1px); }

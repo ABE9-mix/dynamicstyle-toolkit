@@ -20,17 +20,20 @@
 ├─ apps.json             工具清单（总目录读它渲染）
 ├─ DESIGN.md             设计方法：中文主导的排版系统（新应用照它做）
 ├─ assets/
+│  ├─ logo.svg           站点 Logo（矢量，页头 + favicon）
 │  ├─ catalog.css        总目录样式
 │  └─ catalog.js         总目录逻辑（渲染卡片 + 懒加载实时预览）
 ├─ tools/
 │  └─ build-site.mjs     打包出 dist-upload/（可直传静态托管）
 └─ apps/
-   └─ stylekit/          工具 ①：StyleKit 噪声边缘组件生成器
-      ├─ index.html
-      ├─ css/ src/ dist/
-      ├─ tools/          该应用的开发/验收脚本（不进产物）
-      ├─ tests/          该应用的对照页（不进产物）
-      └─ README.md       应用自己的文档
+   ├─ stylekit/          工具 ①：噪声边缘组件 StyleKit
+   │  ├─ index.html
+   │  ├─ css/ src/ dist/
+   │  ├─ tools/          该应用的开发/验收脚本（不进产物）
+   │  ├─ tests/          该应用的对照页（不进产物）
+   │  └─ README.md       应用自己的文档
+   └─ wavedot/           工具 ②：动态波点背景 WaveDots
+      └─ index.html      单文件（WebGL 引擎 + 面板都在里面）
 ```
 
 ---
@@ -79,9 +82,28 @@ py -3 -m http.server 8791 --bind 127.0.0.1
 
 | # | 工具 | 说明 | 目录 |
 |---|---|---|---|
-| 01 | **StyleKit** | 噪声边缘组件生成器：纯色块 + 三维噪声沿法线实时生成波浪边缘；五种底形（矩形/椭圆/多边形/星形/SVG 路径）、图形上拖把手缩放旋转、导出 HTML / CSS / SVG / JSON / WebM | [`apps/stylekit/`](apps/stylekit/README.md) |
+| 01 | **噪声边缘组件** `StyleKit` | 会呼吸的网页样式组件：纯色块 + 三维噪声沿法线实时生成波浪边缘；五种底形（矩形/椭圆/多边形/星形/SVG 路径）、图形上拖把手缩放旋转、导出 HTML / CSS / SVG / JSON / WebM | [`apps/stylekit/`](apps/stylekit/README.md) |
+| 02 | **动态波点背景** `WaveDots` | 规则点阵上跑一道方向性行波：可调方向、波长、波速与起伏强度，波峰处点更大更亮；鼠标透镜 + 点击涟漪，导出 PNG 或独立 WebGL 代码 | [`apps/wavedot/`](apps/wavedot/index.html) |
 
 ---
+
+## 分支策略
+
+| 分支 | 角色 | 说明 |
+|---|---|---|
+| `main` | **稳定线** | 只接收验收过的提交；建站托管（EdgeOne Pages）从这里构建 |
+| `dev` | **探索线** | 现阶段的新功能、新工具、重构都先投这里，跑通了再合回 `main` |
+
+```powershell
+git switch dev      # 日常开发
+git switch main && git merge --no-ff dev   # 验收后合并
+```
+
+## 品牌
+
+Logo：`assets/logo.svg`（矢量，48×48 视框，任意尺寸清晰）。
+陶土色超椭圆底板 + 奶油色「K」波浪笔画 + 青色波点，同时指向「kenzaki」与「图形生成」。
+总目录页头、三个页面的 favicon 都用它。
 
 ## 打包 / 部署（腾讯 EdgeOne Pages）
 

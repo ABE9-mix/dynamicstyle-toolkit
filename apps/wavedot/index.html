@@ -137,6 +137,13 @@ new Function(ENGINE_SRC)();   // 注册 window.initWaveDots
   if(preview) document.documentElement.dataset.preview='1';
   const cv=document.getElementById('cv');
   const P={dir:18,wl:464,sp:0.44,amp:0,gap:15,dot:0.8,rnd:0.31,br:0.75,dotColor:'#8bd1d8',bg:'#14171b',lens:150};
+  /* 允许用 URL 覆盖配色（预览卡片 / 嵌入用）：?bg=%23rrggbb&dot=%23rrggbb */
+  try{
+    const q=new URLSearchParams(location.search);
+    const hex=s=>{ s=(s||'').trim(); if(!/^#?[0-9a-fA-F]{6}$/.test(s)) return null; return '#'+s.replace('#',''); };
+    const bg=hex(q.get('bg')); if(bg) P.bg=bg;
+    const dt=hex(q.get('dot')); if(dt) P.dotColor=dt;
+  }catch(e){}
   const ctrl=window.initWaveDots(cv, Object.assign({},P));
   const $=id=>document.getElementById(id);
   const fmt={dir:v=>Math.round(v)+'°',wl:v=>Math.round(v),sp:v=>(+v).toFixed(2),amp:v=>(+v).toFixed(2),gap:v=>Math.round(v),dot:v=>(+v).toFixed(1),rnd:v=>(+v).toFixed(2),br:v=>(+v).toFixed(2)};

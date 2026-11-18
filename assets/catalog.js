@@ -123,7 +123,12 @@
       const setText = (id, v) => { const e = $(id); if (e) e.textContent = v; };
 
       if (data.name) setText('foot-zh', data.name);
-      if (data.intro) setText('tagline', data.intro);
+      if (data.intro) {
+        setText('tagline', data.intro);
+        // 短句当标语处理（拉大字号/字距），长句仍是正文段落
+        const t = $('tagline');
+        if (t && data.intro.length <= 24) t.classList.add('is-slogan');
+      }
       if (data.taglineEn) setText('tagline-en', data.taglineEn);
       setText('app-count', apps.length + ' 个工具');
       document.title = (data.name || 'kenzakiABE9 的图形生成库') + ' · 网页图形与样式生成工具集';
